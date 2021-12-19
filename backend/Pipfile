@@ -9,6 +9,7 @@ djangorestframework = "*"
 l = "*"
 dj-rest-auth = "*"
 django-allauth = "*"
+django-cors-headers = "==3.4.0"
 
 [dev-packages]
 
