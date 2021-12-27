@@ -1,13 +1,13 @@
 from django.shortcuts import render
 from django.contrib.auth import get_user_model
 from rest_framework import generics
-from .serializers import UserSerializer,UserDataSerializer
-from UserData.models import UserData
+from .serializers import UserSerializer,UserProfileSerializer
+from UserData.models import Profile
 # Create your views here.
 User = get_user_model()
 
 
-class UserList(generics.ListCreateAPIView):
+class UserList(generics.ListAPIView):
     serializer_class = UserSerializer
     queryset = User.objects.all()
 
@@ -22,12 +22,17 @@ class UserDetail(generics.RetrieveUpdateDestroyAPIView):
             return self.request.user
         return self.queryset.get(pk=pk)
 
-class UserDataDetail(generics.RetrieveUpdateDestroyAPIView):
-    serializer_class = UserDataSerializer
-    queryset = UserData.objects.all()
+class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = UserProfileSerializer
+    queryset = User.objects.all()
+
+    def get_object(self):
+        pk = self.kwargs['pk']
+        return self.queryset.get(pk=pk).profile
 
 
-class UserDataList(generics.ListCreateAPIView):
-    serializer_class = UserDataSerializer
-    queryset = UserData.objects.all()
+
+class ProfileList(generics.ListCreateAPIView):
+    serializer_class = UserProfileSerializer
+    queryset = Profile.objects.all()
 
