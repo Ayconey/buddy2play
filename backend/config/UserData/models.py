@@ -16,8 +16,9 @@ class Profile(models.Model):
     country = models.CharField(max_length=50, blank=True)
     city = models.CharField(max_length=50, blank=True)
     sport = models.CharField(max_length=60, blank=True)
-
-    #date_of_birth = models.DateField()
+    lft = models.BooleanField(default=False)
+    lfc = models.BooleanField(default=False)
+    birthday = models.DateField(default='2000-01-01')
     def __str__(self):
         return f"{self.name} {self.surname} from {self.city}"
 

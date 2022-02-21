@@ -20,6 +20,9 @@ def registerUserProfile(request):  # vulnerable
     country = request.data['country']
     city = request.data['city']
     sport = request.data['sport']
+    lft = request.data['lft']
+    lfc = request.data['lfc']
+
     # validation
     if len(name) == 0 or len(surname) == 0 or len(gender) == 0 or len(country) == 0 or len(city) == 0 or len(
             sport) == 0 or len(username) == 0:
