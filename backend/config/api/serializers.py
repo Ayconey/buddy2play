@@ -18,5 +18,5 @@ class UserSerializer(serializers.ModelSerializer):
 
 class TeamSerializer(serializers.ModelSerializer):
     class Meta:
-        fields = ('admin','users','sport','name','city','country','recruting','max_users')
+        fields = ('id','admin','users','sport','name','city','country','recruting','max_users')
         model = Team

@@ -1,6 +1,6 @@
 from django.urls import path,include
 from .views import UserList,UserDetail,ProfileDetail,ProfileList,registerUserProfile,deleteUserByUsername,UserSearch,\
-    TeamList,createTeam,give_user_teams
+    TeamList,TeamDetail,createTeam,give_user_teams,TeamSearch
 
 urlpatterns = [
     path('api-auth/',include('rest_framework.urls')),
@@ -12,6 +12,8 @@ urlpatterns = [
     path('users/dbu/',deleteUserByUsername),
     path('users/searched/',UserSearch),
     path('teams/',TeamList.as_view()),
+    path('teams/<int:pk>/',TeamDetail.as_view()),
     path('teams/create/',createTeam),
     path('teams/of_this_user/',give_user_teams),
+    path('teams/searched/',TeamSearch),
 ]

@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from django.contrib.auth import get_user_model
 from rest_framework import permissions, generics, status
 from rest_framework.response import Response
@@ -6,8 +5,10 @@ from rest_framework.decorators import api_view
 from .serializers import UserSerializer, UserProfileSerializer, TeamSerializer
 from UserData.models import Profile
 from Teams.models import Team
+
 # Create your views here.
 User = get_user_model()
+
 
 @api_view(['POST'])
 def registerUserProfile(request):  # vulnerable
@@ -43,9 +44,8 @@ def registerUserProfile(request):  # vulnerable
     return Response(resp, status=status.HTTP_201_CREATED)
 
 
-@api_view(["GET","POST"])
-def UserSearch(request): 
-
+@api_view(["GET", "POST"])
+def UserSearch(request):
     try:
         sport = request.data['sport']
     except:
@@ -82,13 +82,13 @@ def UserSearch(request):
     selected_users = Profile.objects.all()
 
     if sport:
-        selected_users = selected_users.filter(sport=sport)
+        selected_users = selected_users.filter(sport__startswith=sport)
     if gender:
         selected_users = selected_users.filter(gender=gender)
     if country:
-        selected_users = selected_users.filter(country=country)
+        selected_users = selected_users.filter(country__startswith=country)
     if city:
-        selected_users = selected_users.filter(city=city)
+        selected_users = selected_users.filter(city__startswith=city)
 
     serializer = UserProfileSerializer(selected_users, many=True)
     return Response(data=serializer.data)
@@ -120,9 +120,9 @@ class UserDetail(generics.RetrieveUpdateDestroyAPIView):
         return self.queryset.get(pk=pk)
 
 
-@api_view(['DELETE',"POST"])
+@api_view(['DELETE', "POST"])
 def deleteUserByUsername(request):
-    resp = {'message':'success'}
+    resp = {'message': 'success'}
     username = request.data['username']
     selected_user = User.objects.get(username=username)
     selected_user.delete()
@@ -148,7 +148,7 @@ class TeamList(generics.ListCreateAPIView):
     queryset = Team.objects.all()
 
 
-@api_view(['POST',])
+@api_view(['POST', ])
 def createTeam(request):
     error = False
     try:
@@ -190,17 +190,57 @@ def createTeam(request):
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
     admin = User.objects.get(pk=admin)
-    a=Team.objects.create(sport=sport,name=name,city=city,country=country,admin=admin,max_users=int(max_users))
+    a = Team.objects.create(sport=sport, name=name, city=city, country=country, admin=admin, max_users=int(max_users))
     a.save()
     a.users.add(admin)
     return Response(status=status.HTTP_201_CREATED)
 
 
-@api_view(["GET","POST"])
+@api_view(["GET", "POST"])
 def give_user_teams(request):
     pk_admin = request.data['pk_admin']
     admin = User.objects.get(pk=int(pk_admin))
     selected_teams = Team.objects.all().filter(admin=admin)
+
+    serializer = TeamSerializer(selected_teams, many=True)
+    return Response(data=serializer.data)
+
+
+class TeamDetail(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = TeamSerializer
+    queryset = Team.objects.all()
+
+
+@api_view(["GET", "POST"])
+def TeamSearch(request):
+    try:
+        name = request.data['name']
+    except:
+        name = ""
+
+    try:
+        sport = request.data['sport']
+    except:
+        sport = ""
+    try:
+        country = request.data['country']
+    except:
+        country = ""
+    try:
+        city = request.data['city']
+    except:
+        city = ""
+
+    selected_teams = Team.objects.all()
+
+    if name:
+        selected_teams = selected_teams.filter(name__startswith=name)
+    if sport:
+        selected_teams = selected_teams.filter(sport__startswith=sport)
+    if country:
+        selected_teams = selected_teams.filter(country__startswith=country)
+    if city:
+        selected_teams = selected_teams.filter(city__startswith=city)
 
     serializer = TeamSerializer(selected_teams, many=True)
     return Response(data=serializer.data)
