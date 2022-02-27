@@ -3,9 +3,9 @@ from django.contrib.auth import get_user_model
 from rest_framework import permissions, generics, status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from .serializers import UserSerializer, UserProfileSerializer
+from .serializers import UserSerializer, UserProfileSerializer, TeamSerializer
 from UserData.models import Profile
-
+from Teams.models import Team
 # Create your views here.
 User = get_user_model()
 
@@ -44,8 +44,8 @@ def registerUserProfile(request):  # vulnerable
 
 
 @api_view(["GET","POST"])
-def UserSearch(request): # try using try and except
-    print(request.data)
+def UserSearch(request): 
+
     try:
         sport = request.data['sport']
     except:
@@ -141,3 +141,66 @@ class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
 class ProfileList(generics.ListCreateAPIView):
     serializer_class = UserProfileSerializer
     queryset = Profile.objects.all()
+
+
+class TeamList(generics.ListCreateAPIView):
+    serializer_class = TeamSerializer
+    queryset = Team.objects.all()
+
+
+@api_view(['POST',])
+def createTeam(request):
+    error = False
+    try:
+        sport = request.data['sport']
+    except:
+        sport = ""
+
+    try:
+        name = request.data['name']
+    except:
+        name = ""
+
+    try:
+        city = request.data['city']
+    except:
+        city = ""
+
+    try:
+        country = request.data['country']
+    except:
+        country = ""
+
+    try:
+        admin = request.data['admin']
+    except:
+        error = True
+
+    try:
+        users = request.data['users']
+    except:
+        error = True
+
+    try:
+        max_users = request.data['max_users']
+    except:
+        error = True
+
+    if error:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    admin = User.objects.get(pk=admin)
+    a=Team.objects.create(sport=sport,name=name,city=city,country=country,admin=admin,max_users=int(max_users))
+    a.save()
+    a.users.add(admin)
+    return Response(status=status.HTTP_201_CREATED)
+
+
+@api_view(["GET","POST"])
+def give_user_teams(request):
+    pk_admin = request.data['pk_admin']
+    admin = User.objects.get(pk=int(pk_admin))
+    selected_teams = Team.objects.all().filter(admin=admin)
+
+    serializer = TeamSerializer(selected_teams, many=True)
+    return Response(data=serializer.data)

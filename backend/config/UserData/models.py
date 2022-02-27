@@ -19,6 +19,8 @@ class Profile(models.Model):
     lft = models.BooleanField(default=False)
     lfc = models.BooleanField(default=False)
     birthday = models.DateField(default='2000-01-01')
+
+    buddies = models.ManyToManyField(User,default=None,related_name='buddies_r')
     def __str__(self):
         return f"{self.name} {self.surname} from {self.city}"
 

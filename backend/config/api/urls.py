@@ -1,5 +1,6 @@
 from django.urls import path,include
-from .views import UserList,UserDetail,ProfileDetail,ProfileList,registerUserProfile,deleteUserByUsername,UserSearch
+from .views import UserList,UserDetail,ProfileDetail,ProfileList,registerUserProfile,deleteUserByUsername,UserSearch,\
+    TeamList,createTeam,give_user_teams
 
 urlpatterns = [
     path('api-auth/',include('rest_framework.urls')),
@@ -10,4 +11,7 @@ urlpatterns = [
     path('users/update_profile/',registerUserProfile),
     path('users/dbu/',deleteUserByUsername),
     path('users/searched/',UserSearch),
+    path('teams/',TeamList.as_view()),
+    path('teams/create/',createTeam),
+    path('teams/of_this_user/',give_user_teams),
 ]
