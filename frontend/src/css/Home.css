@@ -1,0 +1,8 @@
+body {
+  background-color: rgb(173, 173, 173);
+}
+
+#cont1 {
+  max-width: 80%;
+  min-height: 800px;
+}

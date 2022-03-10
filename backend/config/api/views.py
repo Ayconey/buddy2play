@@ -109,6 +109,20 @@ class UserList(generics.ListAPIView):
     queryset = User.objects.all()
 
 
+@api_view(['DELETE', "POST"])
+def specific_user_list(request):
+    users = request.data['users']
+    user_profiles = []
+
+    for user_pk in users:
+        this_user = User.objects.get(pk=user_pk)
+        tmp = Profile.objects.get(user=this_user)
+        user_profiles.append(tmp)
+
+    serializer = UserProfileSerializer(user_profiles,many=True)
+    return Response(status=status.HTTP_200_OK,data=serializer.data)
+
+
 class UserDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = UserSerializer
     queryset = User.objects.all()
@@ -244,3 +258,60 @@ def TeamSearch(request):
 
     serializer = TeamSerializer(selected_teams, many=True)
     return Response(data=serializer.data)
+
+
+@api_view(['DELETE', "POST"])
+def kick_from_team(request):
+    current_user = User.objects.get(pk=request.data['user_id'])
+    user_to_kick=User.objects.get(pk=request.data['user_id'])
+    team = Team.objects.get(pk=request.data['team_id'])
+    team.users.remove(user_to_kick)
+    return Response(status=status.HTTP_200_OK)
+
+
+@api_view(["GET", "POST"])
+def addBuddy(request):
+    added_pk = int(request.data['added_user_pk'])
+    user_id = int(request.data['user_id'])
+
+    current_user_profile = Profile.objects.get(user=User.objects.get(pk=user_id))
+    user_being_added = User.objects.get(pk=added_pk)
+    current_user_profile.buddies.add(user_being_added)
+
+    return Response(status=status.HTTP_200_OK)
+
+
+@api_view(["GET", "POST"])
+def get_user_buddies(request):
+    user_id = int(request.data['user_id'])
+    friends = User.objects.get(pk=user_id).profile.buddies.all()
+    friends_list = []
+
+    for friend in friends:
+        friends_list.append(friend.profile)
+
+    serializer = UserProfileSerializer(friends_list,many=True)
+    return Response(status=status.HTTP_200_OK,data=serializer.data)
+
+
+@api_view(["GET", "POST"])
+def check_if_added(request):
+    added = False
+    print(request.data['user_id'])
+    print(request.data['other_id'])
+    user = User.objects.get(pk=int(request.data['user_id'])).profile
+    other = User.objects.get(pk=int(request.data['other_id']))
+
+    friends = user.buddies.all()
+    if other in friends:
+        added = True
+    return Response(status=status.HTTP_200_OK, data={"added":added})
+
+
+@api_view(["GET", "POST"])
+def unfriend(request):
+    unfriended = User.objects.get(pk=int(request.data['unfriended_id']))
+    user = User.objects.get(pk=int(request.data['user_id'])).profile
+
+    user.buddies.remove(unfriended)
+    return Response(status=status.HTTP_200_OK)
