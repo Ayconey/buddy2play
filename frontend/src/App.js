@@ -58,6 +58,21 @@ class App extends Component {
   }
   
   render(){
+    if (this.state.id===0){
+      return (
+        <div className="App">
+          <Router>
+            <Navbar/>
+            <Routes>
+              <Route path='/' element={<Home not_logged={true} />}></Route>
+              <Route path='/login' element={<Login setToken={this.setCookieToken} token={this.state.token} />}></Route>
+              <Route path='/register' element={<Register setToken={this.setCookieToken} token={this.state.token} />}></Route>
+              <Route path='/register_success' element={<RegistrationSuccess />}></Route>
+            </Routes>
+          </Router>
+        </div>
+      );
+    } 
     return (
       <div className="App">
         <Router>

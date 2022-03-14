@@ -33,7 +33,6 @@ export default class Search extends Component {
             "age_max": age_max,
             "country": country,
             "city": city,
-            
         }
         axios.post('http://127.0.0.1:8000/api/users/searched/', data)
             .then(Response => {

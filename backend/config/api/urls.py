@@ -1,7 +1,7 @@
 from django.urls import path,include
 from .views import UserList,UserDetail,ProfileDetail,ProfileList,registerUserProfile,deleteUserByUsername,UserSearch,\
     TeamList,TeamDetail,createTeam,give_user_teams,TeamSearch,addBuddy,get_user_buddies,check_if_added,unfriend, \
-    specific_user_list,kick_from_team
+    specific_user_list,kick_from_team,add_to_team,give_admin_teams
 
 urlpatterns = [
     path('api-auth/',include('rest_framework.urls')),
@@ -23,6 +23,8 @@ urlpatterns = [
     path('teams/<int:pk>/',TeamDetail.as_view()),
     path('teams/create/',createTeam),
     path('teams/of_this_user/',give_user_teams),
+    path('teams/of_this_user_admin/',give_admin_teams),
     path('teams/searched/',TeamSearch),
     path('teams/kick_from_team/',kick_from_team),
+    path('teams/add_to_team/',add_to_team),
 ]

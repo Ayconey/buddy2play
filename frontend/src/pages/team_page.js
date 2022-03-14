@@ -27,7 +27,7 @@ export default function TeamPage(props) {
     }
 
     const kickFromTeam = (user_id) => {
-        axios.post(`http://127.0.0.1:8000/api/teams/kick_from_team/`,{"user_id":user_id,"team_id":id})
+        axios.post(`http://127.0.0.1:8000/api/teams/kick_from_team/`,{"current_user":props.user_id,"user_id":user_id,"team_id":id})
         .then(Response=>{console.log(Response)})
         .catch(error=>{console.log(error)})
     }

@@ -22,7 +22,7 @@ export default class Home extends Component {
         }
 
     GetUserTeams = () => {
-        axios.post('http://127.0.0.1:8000/api/teams/of_this_user/',{"pk_admin":this.props.user_id})
+        axios.post('http://127.0.0.1:8000/api/teams/of_this_user/',{"user_id":this.props.user_id})
         .then(Response =>{
             console.log(Response)
             this.setState({user_teams:Response.data})
@@ -45,6 +45,13 @@ export default class Home extends Component {
     }
 
     render() {
+        if(this.props.not_logged){
+            return (
+                <div>
+                    <h1>Home Page</h1>
+                </div>
+            )
+        }
         return (
             <div>
                 <h1>Home Page</h1>

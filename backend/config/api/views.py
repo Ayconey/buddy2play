@@ -212,13 +212,20 @@ def createTeam(request):
 
 @api_view(["GET", "POST"])
 def give_user_teams(request):
-    pk_admin = request.data['pk_admin']
-    admin = User.objects.get(pk=int(pk_admin))
-    selected_teams = Team.objects.all().filter(admin=admin)
+    current_user = User.objects.get(pk=int(request.data['user_id']))
+    selected_teams = current_user.teams.all()
 
     serializer = TeamSerializer(selected_teams, many=True)
     return Response(data=serializer.data)
 
+
+@api_view(["GET", "POST"])
+def give_admin_teams(request):
+    current_user = User.objects.get(pk=int(request.data['user_id']))
+    selected_teams = Team.objects.all().filter(admin=current_user)
+
+    serializer = TeamSerializer(selected_teams, many=True)
+    return Response(data=serializer.data)
 
 class TeamDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = TeamSerializer
@@ -262,9 +269,13 @@ def TeamSearch(request):
 
 @api_view(['DELETE', "POST"])
 def kick_from_team(request):
-    current_user = User.objects.get(pk=request.data['user_id'])
+    current_user = User.objects.get(pk=request.data['current_user'])
     user_to_kick=User.objects.get(pk=request.data['user_id'])
     team = Team.objects.get(pk=request.data['team_id'])
+
+    if current_user != team.admin or current_user==user_to_kick: # user cant kick himself and to kick must be admin
+        return Response(status=status.HTTP_403_FORBIDDEN)
+
     team.users.remove(user_to_kick)
     return Response(status=status.HTTP_200_OK)
 
@@ -315,3 +326,16 @@ def unfriend(request):
 
     user.buddies.remove(unfriended)
     return Response(status=status.HTTP_200_OK)
+
+
+@api_view(["GET", "POST"])
+def add_to_team(request):
+    current_user =  User.objects.get(pk=int(request.data['current_user']))
+    user_to_add = User.objects.get(pk=int(request.data['user_to_add']))
+    team = Team.objects.get(pk=request.data['team_id'])
+
+    if current_user == team.admin:
+        team.users.add(user_to_add)
+        return Response(status=status.HTTP_200_OK)
+
+    return Response(status=status.HTTP_403_FORBIDDEN)
