@@ -14,6 +14,8 @@ import Searcht from './pages/searcht';
 import UserProfile from './pages/userprofile';
 import CreateTeam from './pages/create_team';
 import TeamPage from './pages/team_page';
+import YourProfile from './pages/yourProfile';
+
 class App extends Component {
   constructor(props){
     super(props);
@@ -78,16 +80,16 @@ class App extends Component {
         <Router>
           <Navbar token={this.state.token} removeToken={this.removeToken} />
           <Routes>
+              <Route path='/create_team' element={<CreateTeam token={this.state.token} user_id={this.state.id} />}></Route>
+              <Route path='/teams/:id' element={<TeamPage token={this.state.token} user_id={this.state.id} />}></Route>
+              <Route path='/login' element={<Login setToken={this.setCookieToken} token={this.state.token} />}></Route>
+              <Route path='/register' element={<Register setToken={this.setCookieToken} token={this.state.token} />}></Route>
+              <Route path='/register_success' element={<RegistrationSuccess />}></Route>
+              <Route path='/search' element={<Search/>}></Route>
+              <Route path='/searcht' element={<Searcht/>}></Route>
+              <Route path='/profile/:id' element={<UserProfile token={this.state.token} user_id={this.state.id} />}></Route>
+              <Route path='/your_profile' element={<YourProfile token={this.state.token} user_id={this.state.id} />}></Route>
             <Route path='/' element={<Home token={this.state.token} user_id={this.state.id} />}></Route>
-            <Route path="*" element={<Navigate to="/" />} />
-            <Route path='/create_team' element={<CreateTeam token={this.state.token} user_id={this.state.id} />}></Route>
-            <Route path='/teams/:id' element={<TeamPage token={this.state.token} user_id={this.state.id} />}></Route>
-            <Route path='/login' element={<Login setToken={this.setCookieToken} token={this.state.token} />}></Route>
-            <Route path='/register' element={<Register setToken={this.setCookieToken} token={this.state.token} />}></Route>
-            <Route path='/register_success' element={<RegistrationSuccess />}></Route>
-            <Route path='/search' element={<Search/>}></Route>
-            <Route path='/searcht' element={<Searcht/>}></Route>
-            <Route path='/profile/:id' element={<UserProfile token={this.state.token} user_id={this.state.id} />}></Route>
           </Routes>
         </Router>
       </div>

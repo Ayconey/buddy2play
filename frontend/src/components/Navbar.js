@@ -16,6 +16,7 @@ function Navbaro(props) {
                             <Nav.Link href="/">Home</Nav.Link>
                             <Nav.Link href="/search">search for players</Nav.Link>
                             <Nav.Link href="/searcht">search for teams</Nav.Link>
+                            <Nav.Link href="/your_profile">your profile</Nav.Link>
                             <Nav.Link href="/logout" onClick={handleLogout}>Logout</Nav.Link>
                         </Nav>
                     </Container>
