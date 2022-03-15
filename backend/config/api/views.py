@@ -339,3 +339,15 @@ def add_to_team(request):
         return Response(status=status.HTTP_200_OK)
 
     return Response(status=status.HTTP_403_FORBIDDEN)
+
+
+@api_view(["GET", "POST"])
+def team_change_admin(request):
+    current_user = User.objects.get(pk=int(request.data['current_user']))
+    new_admin = User.objects.get(pk=int(request.data['new_admin']))
+    team = Team.objects.get(pk=int(request.data['team_id']))
+    if current_user == team.admin:
+        team.admin = new_admin
+        team.save()
+        return Response(status=status.HTTP_200_OK)
+    return Response(status=status.HTTP_403_FORBIDDEN)

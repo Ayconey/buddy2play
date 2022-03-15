@@ -6,7 +6,7 @@ from Teams.models import Team
 User = get_user_model()
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
-        fields = ('user','name','surname','gender','country','city','sport','lft','lfc','birthday')
+        fields = ('user','name','surname','gender','country','city','sport','birthday')
         model = Profile
 
 
@@ -18,5 +18,5 @@ class UserSerializer(serializers.ModelSerializer):
 
 class TeamSerializer(serializers.ModelSerializer):
     class Meta:
-        fields = ('id','admin','users','sport','name','city','country','recruting','max_users')
+        fields = ('id','admin','users','sport','name','city','country','max_users')
         model = Team

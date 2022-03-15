@@ -10,5 +10,4 @@ class Team(models.Model):
     name = models.CharField(max_length=40)
     city = models.CharField(max_length=50,default='')
     country = models.CharField(max_length=50,default='')
-    recruting = models.BooleanField(default=True)
     max_users = models.IntegerField()
