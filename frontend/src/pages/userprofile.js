@@ -76,7 +76,6 @@ export default function UserProfile(props) {
         <h3>city: {user.city}</h3>
         <h4>User is already added as your friend</h4>
         <Button onClick={()=>{delete_friend(id)}}>Unfriend</Button>
-        <Button onClick={()=>{addFriend(id)}}>add friend</Button>
         <br></br>
         <h2>Add this user to your team</h2>
         <h3>Choose team:</h3>

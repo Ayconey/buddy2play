@@ -22,7 +22,7 @@ export default class Home extends Component {
         }
 
     GetUserTeams = () => {
-        axios.post('http://127.0.0.1:8000/api/teams/of_this_user/',{"user_id":this.props.user_id})
+        axios.post('http://127.0.0.1:8000/api/teams/of_this_user/',{headers:{"Authorization":`Token ${this.props.token}`},"user_id":this.props.user_id})
         .then(Response =>{
             console.log(Response)
             this.setState({user_teams:Response.data})
@@ -31,7 +31,7 @@ export default class Home extends Component {
     }
 
     GetUserFriends = () => {
-        axios.post('http://127.0.0.1:8000/api/users/getFriends/',{'user_id':this.props.user_id})
+        axios.post('http://127.0.0.1:8000/api/users/getFriends/',{headers:{"Authorization":`Token ${this.props.token}`},'user_id':this.props.user_id})
         .then(Response=>{
             console.log(Response)
             this.setState({user_friends:Response.data})

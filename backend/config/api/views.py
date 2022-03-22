@@ -1,7 +1,15 @@
+# django imports
 from django.contrib.auth import get_user_model
+from django.views.decorators.csrf import csrf_exempt
+
+# rest imports
 from rest_framework import permissions, generics, status
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view,permission_classes,authentication_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authtoken.models import Token
+
+# other imports
 from .serializers import UserSerializer, UserProfileSerializer, TeamSerializer
 from UserData.models import Profile
 from Teams.models import Team
@@ -212,6 +220,9 @@ def createTeam(request):
 
 @api_view(["GET", "POST"])
 def give_user_teams(request):
+    print(request.user)
+    print(request.auth)
+    print(request.data)
     current_user = User.objects.get(pk=int(request.data['user_id']))
     selected_teams = current_user.teams.all()
 
