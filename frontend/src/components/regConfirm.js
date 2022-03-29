@@ -32,7 +32,7 @@ export default class regConfirm extends Component {
             password1 : this.state.password1,
             password2 : this.state.password2,
         }
-        const birthday = `${this.state.year}-${this.state.month}-${this.state.day}`
+        const birthdayo = `${this.state.year}-${this.state.month}-${this.state.day}`
         const data2 = {
             username:this.state.username,
             name : this.state.name,
@@ -41,11 +41,9 @@ export default class regConfirm extends Component {
             country : this.state.country,
             city : this.state.city,
             sport : this.state.sport,
-            lft : this.state.lft,
-            lfc : this.state.lfc,
-            birthday : birthday,
+            birthday : birthdayo,
         }
-
+        console.log(data2)
         axios.post("http://127.0.0.1:8000/dj-rest-auth/registration/",data1)
         .then(response=>{
             console.log(response);

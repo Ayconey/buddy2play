@@ -1,0 +1,19 @@
+
+#main_row {
+    background: rgb(2,0,36);
+    background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(173,42,191,1) 0%, rgba(0,146,176,1) 100%);
+    color:white;
+    min-height: 12vh;
+}
+#main_header {
+    padding-top: 2.2vh;
+}
+#outliner {
+    background: rgb(2,0,36);
+    min-height: 1vh;
+}
+
+#logo_img {
+    height: 10vh;
+    width: auto;
+}

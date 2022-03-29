@@ -6,3 +6,14 @@ body {
   max-width: 80%;
   min-height: 800px;
 }
+
+#btn-create {
+  color:white;
+  background-color: rgb(163, 14, 163);
+  border:purple 1px;
+  font-size: 3vh;
+}
+
+#friendlist-item {
+  text-decoration: none;
+}

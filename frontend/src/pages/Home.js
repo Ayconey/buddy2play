@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
 import { MDBInput, MDBCol } from "mdbreact";
-import { Container,Col,Row,Nav } from 'react-bootstrap'
+import { Container,Col,Row,Nav,ListGroup,Button } from 'react-bootstrap'
 import {Link} from 'react-router-dom';
 import axios from 'axios';
 import '../css/Home.css'
+import {BsFillArrowRightCircleFill} from 'react-icons/bs'
+import {BiGroup} from 'react-icons/bi'
 
 
 export default class Home extends Component {
@@ -16,8 +18,10 @@ export default class Home extends Component {
     }
     componentDidMount(){
         setTimeout(function() { //Start the timer
-            this.GetUserTeams();
-            this.GetUserFriends();
+            if (this.props.token){
+                this.GetUserTeams();
+                this.GetUserFriends();
+            }
         }.bind(this), 100)
         }
 
@@ -59,19 +63,30 @@ export default class Home extends Component {
                     <Row>
 
                     <Col > {/*first column*/}
-                    Teams
-                    <button><Nav.Link href="/create_team">start new team</Nav.Link></button>
-                    <MDBCol md="10">
-                        <MDBInput hint="Search" type="text" onChange={this.handleChange} containerClass="mt-0" name="team_input" />
-                    </MDBCol>
-                    {this.state.user_teams.map(team=>(
-                    <div key={team.id}>
-                        <h2>{team.name} {team.city}</h2>
-                        <Link to ={`/teams/${team.id}`} >team page</Link>
-                        <br></br>
-                    </div>
-                    ))
-                    }
+                    <Nav.Link href="/create_team"><Button id='btn-create'><h2>Start new team</h2></Button></Nav.Link>
+                    
+                    <br></br>
+                    <h2>Your Teams</h2>
+                    <ListGroup>
+                        {this.state.user_teams.map(team=>(
+                        <ListGroup.Item as='li'>
+                            <div key={team.id}>
+                            <h2>{team.name}</h2>
+                            <p>from {team.city}</p>
+                            <Link to ={`/teams/${team.id}`} >
+                                <Button>
+                                <BsFillArrowRightCircleFill/>
+                                </Button>
+                            </Link>
+                            <br></br>
+                            </div>
+                        </ListGroup.Item>
+                        ))
+                        }
+                    </ListGroup>
+                    
+                    
+
                     </Col>
 
                     <Col xs={9}> {/*2nd column, main section*/}
@@ -81,18 +96,21 @@ export default class Home extends Component {
                     </Col>
 
                     <Col> {/*3rd column*/}
-                    Buddies
-                    <MDBCol md="10">
-                        <MDBInput hint="Search" type="text" onChange={this.handleChange} containerClass="mt-0" name="friend_input" />
-                    </MDBCol>
-
-                    {this.state.user_friends.map(friend=>(
-                    <div key={friend.user}>
-                        <Link to={`/profile/${friend.user}`}><h3>{friend.name} {friend.surname[0]}</h3></Link>
-                        <br></br>
-                    </div>
-                    ))
-                    }
+                    <h2>Your Friends</h2><BiGroup size={32} style={{color:'purple'}}></BiGroup>
+                    
+                    <ListGroup>
+                        {this.state.user_friends.map(friend=>(
+                            <ListGroup.Item >
+                                <div key={friend.user} >
+                                <Link id='friendlist-item'  to={`/profile/${friend.user}`}><h3 >{friend.name} {friend.surname}</h3></Link>
+                                </div>
+                                <br></br>
+                            </ListGroup.Item>
+                        
+                        ))
+                        }
+                    </ListGroup>
+                    
                     </Col>   
                     </Row>
                     

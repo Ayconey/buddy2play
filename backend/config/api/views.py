@@ -22,6 +22,7 @@ User = get_user_model()
 def registerUserProfile(request):  # vulnerable
     resp = {}
     # data
+    print(request.data['birthday'])
     username = request.data['username']
     name = request.data['name']
     surname = request.data['surname']
@@ -29,25 +30,27 @@ def registerUserProfile(request):  # vulnerable
     country = request.data['country']
     city = request.data['city']
     sport = request.data['sport']
-    lft = request.data['lft']
-    lfc = request.data['lfc']
-
+    birthday = request.data['sport']
     # validation
     if len(name) == 0 or len(surname) == 0 or len(gender) == 0 or len(country) == 0 or len(city) == 0 or len(
-            sport) == 0 or len(username) == 0:
+            sport) == 0 or len(username) == 0 or request.data['birthday']==0:
         resp['message'] = "one or more fields left empty"
         return Response(resp, status=status.HTTP_400_BAD_REQUEST)
 
     # if passed validation
-    selected_user = User.objects.get(username=username)
-    selected_profile = Profile.objects.get(user=selected_user)
-    selected_profile.name = name
-    selected_profile.surname = surname
-    selected_profile.gender = gender
-    selected_profile.country = country
-    selected_profile.city = city
-    selected_profile.sport = sport
-    selected_profile.save()
+    try:
+        selected_user = User.objects.get(username=username)
+        selected_profile = Profile.objects.get(user=selected_user)
+        selected_profile.name = name
+        selected_profile.surname = surname
+        selected_profile.gender = gender
+        selected_profile.country = country
+        selected_profile.city = city
+        selected_profile.sport = sport
+        selected_profile.birthday = request.data['birthday']
+        selected_profile.save()
+    except:
+        return Response(resp, status=status.HTTP_400_BAD_REQUEST)
     resp['message'] = "Success"
     return Response(resp, status=status.HTTP_201_CREATED)
 

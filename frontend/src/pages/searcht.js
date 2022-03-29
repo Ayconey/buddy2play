@@ -1,8 +1,8 @@
 import axios from 'axios';
 import React, { Component } from 'react';
 import {Link} from 'react-router-dom';
-import { Form, Button, Row, Col } from 'react-bootstrap';
-
+import { Form, Button, Row, Col,ListGroup } from 'react-bootstrap';
+import {GiTrophy} from 'react-icons/gi'
 
 export default class Searcht extends Component {
     constructor(props) {
@@ -69,21 +69,30 @@ export default class Searcht extends Component {
                                     Search
                                 </Button>
                             </Form>
+                            <br></br>
+                            <br></br>
+                            <div className='teams'>
+                            <h2>Teams</h2>
+                            <ListGroup>
+                                {this.state.teams.map(team=>(
+                                    <ListGroup.Item>
+                                        <div key={team.id}>
+                                        
+                                        <h2>{team.name} {team.city}</h2>
+                                        <Link to ={`/teams/${team.id}`} ><Button>team page<GiTrophy></GiTrophy> </Button></Link>
+                                        </div>
+                                    </ListGroup.Item>
+                                    
+                                ))
+                                }
+                            </ListGroup>
+                            
+                            </div>
                         </Col>
+                        
                         <Col></Col>
                     </Row>
-                    <br></br>
-                    <br></br>
-                    <div className='teams'>
-                <h2>Teams</h2>
-                {this.state.teams.map(team=>(
-                    <div key={team.id}>
-                        <h2>{team.name} {team.city}</h2>
-                        <Link to ={`/teams/${team.id}`} >team page</Link>
-                    </div>
-                ))
-                }
-            </div>
+                    
                 </div>
             )
         

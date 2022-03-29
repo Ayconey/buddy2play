@@ -40,7 +40,6 @@ export default function TeamPage(props) {
         .catch(error=>{console.log(error)})
     }
 
-
     useEffect(() => {
         getTeam(id)
         
@@ -48,9 +47,51 @@ export default function TeamPage(props) {
         },[])
     
     let admin = {}
+    let in_team = false
+
     for(const user of players){
         if(user.user===team.admin){
             admin = user
+        }
+        if(user.user===props.user_id){
+            in_team = true
+        }
+    }
+
+    const View_Post = ()=>{
+        if(!in_team){return}
+        return (
+            <div>
+                    
+            </div>
+        )
+    }
+    const Players_list = ()=>{
+        if(props.user_id ===admin.user){
+            return (
+                <div>
+                    {players.map(user=>(
+                    <div key={user.user}>
+                        <h4>{user.name} {user.surname}</h4>
+                        <Button onClick={()=>{kickFromTeam(user.user)}}>kick</Button>
+                        <Button onClick={()=>{
+                            updatePopUp(true)
+                            updatePotAdmin(user.user)
+                        }}>make admin</Button>
+                    </div>
+                ))}
+                </div>
+            )
+        }else{
+            return (
+                <div>
+                    {players.map(user=>(
+                    <div key={user.user}>
+                        <h4>{user.name} {user.surname}</h4>
+                    </div>
+                ))}
+                </div>
+            )
         }
     }
 
@@ -74,26 +115,22 @@ export default function TeamPage(props) {
                 }>Yes</Button>
         </Modal.Footer>
         </Modal>
-
-        <h1>team</h1>
-        {id}
-        <h2>name: {team.name}</h2>
-        <h2>sport: {team.sport}</h2>
-        <h3>country: {team.country}</h3>
-        <h3>city: {team.city}</h3>
-        <h3>admin: {admin.name}{admin.surname}</h3>
-        <br></br>
-        <h3>Players:</h3>
-        {players.map(user=>(
-            <div key={user.user}>
-                <h4>{user.name} {user.surname}</h4>
-                <Button onClick={()=>{kickFromTeam(user.user)}}>kick</Button>
-                <Button onClick={()=>{
-                    updatePopUp(true)
-                    updatePotAdmin(user.user)
-                }}>make admin</Button>
-            </div>
-        ))}
+        <Row>
+            <Col></Col>
+            <Col>
+                <h1>team {team.name}</h1>
+                <br></br>
+                <h2>sport: {team.sport}</h2>
+                <h3>country: {team.country}</h3>
+                <h3>city: {team.city}</h3>
+                <h3>admin: {admin.name}{admin.surname}</h3>
+                <br></br>
+                <h3>Players:</h3>
+                <Players_list/>
+            </Col>
+            <Col></Col>
+        </Row>
+        
     </div>;
     }
 

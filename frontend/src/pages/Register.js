@@ -22,8 +22,6 @@ export default class Register extends Component {
             country:'',
             city:'',
             sport:'',
-            lft:false,
-            lfc:false,
         }
     }
 
@@ -57,9 +55,6 @@ export default class Register extends Component {
     handleChange = (event) =>{
         const name = event.target.name;
         let val = event.target.value;
-        if(name==='lfc' || name === 'lft'){
-            val = event.target.checked
-        }
         let data = {};
         data[name]=val;
         this.setState(data);

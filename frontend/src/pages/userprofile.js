@@ -4,6 +4,7 @@ import {
   } from "react-router-dom";
 import axios from 'axios';
 import { Button } from 'react-bootstrap';
+import {BsFillPersonDashFill,BsFillPersonCheckFill} from 'react-icons/bs'
 
 export default function UserProfile(props) {
     let { id } = useParams();
@@ -32,6 +33,7 @@ export default function UserProfile(props) {
         axios.post(`http://127.0.0.1:8000/api/teams/add_to_team/`,{"current_user":props.user_id,"user_to_add":user_to_add,"team_id":team_id})
         .then(Response=>{console.log(Response)})
         .catch(error=>{console.log(error)})
+        location. reload(false)
     }
 
     const addFriend = (id) =>{
@@ -40,6 +42,7 @@ export default function UserProfile(props) {
             console.log(Response)
         })
         .catch(error =>{console.log(error)})
+        location. reload(false)
     }
 
     const check_if_added = (id) =>{
@@ -56,6 +59,7 @@ export default function UserProfile(props) {
             console.log(Response)
         })
         .catch(error =>{console.log(error)})
+        location. reload(false)
     }
     
     useEffect(() => {
@@ -66,43 +70,41 @@ export default function UserProfile(props) {
 
     if(added){
         return <div>
-        <h1>profile</h1>
-        {id}
-        <h2>name: {user.name}</h2>
-        <h2>surname: {user.surname}</h2>
-        <h2>sport: {user.sport}</h2>
+        <h1>{user.name} {user.surname}</h1>
+        <br></br>
+        <h2>main sport: {user.sport}</h2>
         <h3>gender: {user.gender}</h3>
         <h3>country: {user.country}</h3>
         <h3>city: {user.city}</h3>
-        <h4>User is already added as your friend</h4>
-        <Button onClick={()=>{delete_friend(id)}}>Unfriend</Button>
+        <Button onClick={()=>{delete_friend(id)}} style={{"background-color":"red","border":"red"}}>unfriend <BsFillPersonDashFill ></BsFillPersonDashFill></Button>
         <br></br>
-        <h2>Add this user to your team</h2>
+        <br></br>
+        <br></br>
+        <h2>Add to your team</h2>
         <h3>Choose team:</h3>
         {teams.map(team=>(
             <div key={team.id}>
-                <h4>{team.name}</h4><Button onClick={()=>{addToTeam(team.id,id)}}>Add</Button>
+            <Button onClick={()=>{addToTeam(team.id,id)}}><h4>{team.name}</h4></Button>
             </div>
         ))}
         
     </div>;
     }else{
         return <div>
-        <h1>profile</h1>
-        {id}
-        <h2>name: {user.name}</h2>
-        <h2>surname: {user.surname}</h2>
+        
         <h2>sport: {user.sport}</h2>
         <h3>gender: {user.gender}</h3>
         <h3>country: {user.country}</h3>
         <h3>city: {user.city}</h3>
-        <Button onClick={()=>{addFriend(id)}}>add friend</Button>
+        <Button onClick={()=>{addFriend(id)}}>add friend <BsFillPersonCheckFill></BsFillPersonCheckFill></Button>
         <br></br>
-        <h2>Add to team</h2>
+        <br></br>
+        <br></br>
+        <h2>Add to your team</h2>
         <h3>Choose team:</h3>
         {teams.map(team=>(
             <div key={team.id}>
-                <h4>{team.name}</h4><Button onClick={()=>{addToTeam(team.id,id)}}>Add</Button>
+                <Button onClick={()=>{addToTeam(team.id,id)}}><h4>{team.name}</h4></Button>
             </div>
         ))}
     </div>;

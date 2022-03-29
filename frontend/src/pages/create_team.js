@@ -72,8 +72,6 @@ export default class CreateTeam extends Component {
                         Create
                     </Button>
 
-                    <p>you will have more customization later after that</p>
-
                     </Form>
                     </Col>
                     <Col></Col>
