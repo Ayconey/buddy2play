@@ -5,14 +5,14 @@ from django.views.decorators.csrf import csrf_exempt
 # rest imports
 from rest_framework import permissions, generics, status
 from rest_framework.response import Response
-from rest_framework.decorators import api_view,permission_classes,authentication_classes
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
 
 # other imports
-from .serializers import UserSerializer, UserProfileSerializer, TeamSerializer
+from .serializers import UserSerializer, UserProfileSerializer, TeamSerializer,MessSerializer
 from UserData.models import Profile
-from Teams.models import Team
+from Teams.models import Team,MeetingMessage
 
 # Create your views here.
 User = get_user_model()
@@ -33,7 +33,7 @@ def registerUserProfile(request):  # vulnerable
     birthday = request.data['sport']
     # validation
     if len(name) == 0 or len(surname) == 0 or len(gender) == 0 or len(country) == 0 or len(city) == 0 or len(
-            sport) == 0 or len(username) == 0 or request.data['birthday']==0:
+            sport) == 0 or len(username) == 0 or request.data['birthday'] == 0:
         resp['message'] = "one or more fields left empty"
         return Response(resp, status=status.HTTP_400_BAD_REQUEST)
 
@@ -62,25 +62,17 @@ def UserSearch(request):
     except:
         sport = ""
     try:
-        lft = request.data['lft']
-    except:
-        lft = ""
-    try:
-        lfcg = request.data['lfcg']
-    except:
-        lfcg = ""
-    try:
         gender = request.data['gender']
     except:
         gender = ""
     try:
         age_min = request.data['age_min']
     except:
-        age_min = ""
+        age_min = ''
     try:
         age_max = request.data['age_max']
     except:
-        age_max = ""
+        age_max = ''
     try:
         country = request.data['country']
     except:
@@ -89,6 +81,11 @@ def UserSearch(request):
         city = request.data['city']
     except:
         city = ""
+
+    if age_min =='':
+        age_min=0
+    if age_max=='':
+        age_max=200
 
     selected_users = Profile.objects.all()
 
@@ -100,8 +97,12 @@ def UserSearch(request):
         selected_users = selected_users.filter(country__startswith=country)
     if city:
         selected_users = selected_users.filter(city__startswith=city)
+    age_restricted_users = []
+    for user in selected_users:
+        if user.get_age() >= int(age_min) and user.get_age() <= int(age_max):
+            age_restricted_users.append(user)
 
-    serializer = UserProfileSerializer(selected_users, many=True)
+    serializer = UserProfileSerializer(age_restricted_users, many=True)
     return Response(data=serializer.data)
 
 
@@ -130,8 +131,8 @@ def specific_user_list(request):
         tmp = Profile.objects.get(user=this_user)
         user_profiles.append(tmp)
 
-    serializer = UserProfileSerializer(user_profiles,many=True)
-    return Response(status=status.HTTP_200_OK,data=serializer.data)
+    serializer = UserProfileSerializer(user_profiles, many=True)
+    return Response(status=status.HTTP_200_OK, data=serializer.data)
 
 
 class UserDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -161,6 +162,12 @@ class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
     def get_object(self):
         pk = self.kwargs['pk']
         return self.queryset.get(pk=pk).profile
+
+
+@api_view(['DELETE', "POST"])
+def get_user_age(request):
+    age = Profile.objects.get(user=User.objects.get(pk=int(request.data['user_id']))).get_age()
+    return Response(status=status.HTTP_200_OK,data={"age":age})
 
 
 class ProfileList(generics.ListCreateAPIView):
@@ -241,6 +248,7 @@ def give_admin_teams(request):
     serializer = TeamSerializer(selected_teams, many=True)
     return Response(data=serializer.data)
 
+
 class TeamDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = TeamSerializer
     queryset = Team.objects.all()
@@ -284,10 +292,10 @@ def TeamSearch(request):
 @api_view(['DELETE', "POST"])
 def kick_from_team(request):
     current_user = User.objects.get(pk=request.data['current_user'])
-    user_to_kick=User.objects.get(pk=request.data['user_id'])
+    user_to_kick = User.objects.get(pk=request.data['user_id'])
     team = Team.objects.get(pk=request.data['team_id'])
 
-    if current_user != team.admin or current_user==user_to_kick: # user cant kick himself and to kick must be admin
+    if current_user != team.admin or current_user == user_to_kick:  # user cant kick himself and to kick must be admin
         return Response(status=status.HTTP_403_FORBIDDEN)
 
     team.users.remove(user_to_kick)
@@ -315,8 +323,8 @@ def get_user_buddies(request):
     for friend in friends:
         friends_list.append(friend.profile)
 
-    serializer = UserProfileSerializer(friends_list,many=True)
-    return Response(status=status.HTTP_200_OK,data=serializer.data)
+    serializer = UserProfileSerializer(friends_list, many=True)
+    return Response(status=status.HTTP_200_OK, data=serializer.data)
 
 
 @api_view(["GET", "POST"])
@@ -330,7 +338,7 @@ def check_if_added(request):
     friends = user.buddies.all()
     if other in friends:
         added = True
-    return Response(status=status.HTTP_200_OK, data={"added":added})
+    return Response(status=status.HTTP_200_OK, data={"added": added})
 
 
 @api_view(["GET", "POST"])
@@ -344,7 +352,7 @@ def unfriend(request):
 
 @api_view(["GET", "POST"])
 def add_to_team(request):
-    current_user =  User.objects.get(pk=int(request.data['current_user']))
+    current_user = User.objects.get(pk=int(request.data['current_user']))
     user_to_add = User.objects.get(pk=int(request.data['user_to_add']))
     team = Team.objects.get(pk=request.data['team_id'])
 
@@ -365,3 +373,28 @@ def team_change_admin(request):
         team.save()
         return Response(status=status.HTTP_200_OK)
     return Response(status=status.HTTP_403_FORBIDDEN)
+
+
+@api_view(["GET", "POST"])
+def add_team_post(request):
+    team = Team.objects.get(id=int(request.data['team_id']))
+    author = User.objects.get(id=int(request.data['author']))
+    title = request.data['title']
+    text = request.data['text']
+    MeetingMessage.objects.create(author=author,team=team,title=title,text=text)
+    return Response(status=status.HTTP_200_OK)
+
+@api_view(["GET", "POST"])
+def delete_team_post(request):
+    post_id = request.data['post_id']
+    selected = MeetingMessage.objects.get(pk=int(post_id))
+    selected.delete()
+    return Response(status=status.HTTP_200_OK)
+
+@api_view(["GET", "POST"])
+def give_team_posts(request):
+    team = Team.objects.get(pk=int(request.data["team_id"]))
+    selected_mess = MeetingMessage.objects.filter(team=team)
+    serializer = MessSerializer(selected_mess,many=True)
+    return Response(status=status.HTTP_200_OK,data=serializer.data)
+
