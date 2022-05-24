@@ -35,7 +35,7 @@ export default class Search extends Component {
         axios.post('http://127.0.0.1:8000/api/users/searched/', data)
             .then(Response => {
                 this.setState({users:Response.data})
-                console.log(Response)
+                
             })
             .catch(error => { console.log(error) })
     }

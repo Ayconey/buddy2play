@@ -34,7 +34,7 @@ export default class Login extends Component {
         axios.post('http://127.0.0.1:8000/dj-rest-auth/login/',data)
         .then(response =>{
             this.props.setToken(response.data.key);
-            console.log(response)
+            
             
         })
         .catch(error => {console.log(error)})

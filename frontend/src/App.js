@@ -15,6 +15,7 @@ import UserProfile from './pages/userprofile';
 import CreateTeam from './pages/create_team';
 import TeamPage from './pages/team_page';
 import YourProfile from './pages/yourProfile';
+import Wrong from './pages/wrong';
 
 class App extends Component {
   constructor(props){
@@ -56,7 +57,7 @@ class App extends Component {
     .then(response =>{
       this.setState({id:response.data.id});
     })
-    .catch(error => {console.log(error)});
+    .catch(error => {});
   }
   
   render(){
@@ -70,6 +71,7 @@ class App extends Component {
               <Route path='/login' element={<Login setToken={this.setCookieToken} token={this.state.token} />}></Route>
               <Route path='/register' element={<Register setToken={this.setCookieToken} token={this.state.token} />}></Route>
               <Route path='/register_success' element={<RegistrationSuccess />}></Route>
+              <Route path='/wrong' element={<Wrong />}></Route>
             </Routes>
           </Router>
         </div>

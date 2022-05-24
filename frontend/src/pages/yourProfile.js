@@ -21,7 +21,7 @@ export default class YourProfile extends Component {
     getData = () => {
         axios.get(`http://127.0.0.1:8000/api/users/${this.props.user_id}/profile/`)
         .then(Response=>{
-            console.log(Response)
+            
             this.setState({user:Response.data})
         })
         .catch(error=>{console.log(error)})
@@ -30,7 +30,7 @@ export default class YourProfile extends Component {
     handleDelete = () => {
         axios.delete(`http://127.0.0.1:8000/api/users/${this.props.user_id}/`)
         .then(Response=>{
-            console.log(Response)
+            
             this.setState({deleted:true})
         })
         .catch(error=>{console.log(error)})
@@ -54,7 +54,7 @@ export default class YourProfile extends Component {
         
         axios.put(`http://127.0.0.1:8000/api/users/${this.props.user_id}/profile/`,data)
         .then(response =>{
-            console.log(response) 
+             
         })
         .catch(error => {console.log(error)})
     }

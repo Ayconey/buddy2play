@@ -30,7 +30,7 @@ export default class Searcht extends Component {
         axios.post('http://127.0.0.1:8000/api/teams/searched/', data)
             .then(Response => {
                 this.setState({teams:Response.data})
-                console.log(Response)
+                
             })
             .catch(error => { console.log(error) })
     }

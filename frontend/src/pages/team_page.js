@@ -43,14 +43,14 @@ export default function TeamPage(props) {
         const post_title = event.target.title.value
         const post_text = event.target.text.value
         axios.post(`http://127.0.0.1:8000/api/teams/add_post/`,{"team_id":team.id,"author":props.user_id,"title":post_title,"text":post_text})
-        .then(Response=>{console.log(Response)})
+        .then(Response=>{})
         .catch(error=>{console.log(error)})
     }
 
     const deletePost = (post_id) => {
         axios.post(`http://127.0.0.1:8000/api/teams/delete_post/`,{"post_id":post_id})
         .then(Response=>{
-            console.log(Response)
+            
             window.location.reload(false);
         })
     }
@@ -58,7 +58,7 @@ export default function TeamPage(props) {
     const getPosts = (team_id) => {
         axios.post(`http://127.0.0.1:8000/api/teams/posts/`,{"team_id":team_id}).
         then(Response=>{
-            console.log(Response)
+            
             updatePosts(Response.data)
         })
         .catch(error=>{console.log(error)})

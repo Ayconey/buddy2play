@@ -46,8 +46,32 @@ export default class Register extends Component {
         return true;
     }
 
-    formVal2 = () => {
+    formVal2 = () => {  
         
+        if(!this.state.name){
+            alert("no name");
+            return false;
+        }
+        if(!this.state.surname){
+            alert("no surname");
+            return false;
+        }
+        if(!this.state.gender){
+            alert("no gender");
+            return false;
+        }
+        if(!this.state.country){
+            alert("no country");
+            return false;
+        }
+        if(!this.state.city){
+            alert("no city");
+            return false;
+        }
+        if(!this.state.sport){
+            alert("no sport");
+            return false;
+        }
 
         return true;
     }

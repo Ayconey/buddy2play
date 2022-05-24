@@ -28,7 +28,7 @@ export default class CreateTeam extends Component {
         axios.post('http://127.0.0.1:8000/api/teams/create/', data)
             .then(Response => {
                 this.setState({users:Response.data})
-                console.log(Response)
+                
             })
             .catch(error => { console.log(error) })
 

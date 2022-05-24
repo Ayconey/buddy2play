@@ -7,20 +7,19 @@ export default class regConfirm extends Component {
     constructor(props){
         super(props);
         this.state = this.props.befState;
-        this.setState({'redirect':false})
+        this.setState({'redirect':false,'failed':false})
     }
 
-    componentDidMount(){
-        console.log(this.state)
-    }
+    
     handleSecData = (data) =>{
         axios.post('http://127.0.0.1:8000/api/users/update_profile/',data)
                  .then(response => {
-                     console.log(response);
+                     
                      this.setState({'redirect':true})
                     })
                  .catch(error => {
-                     console.log(error)
+                     
+                     this.setState({'failed':true})
                      axios.post("http://127.0.0.1:8000/api/users/dbu/",{username:this.state.username})
                      
                     })
@@ -46,14 +45,18 @@ export default class regConfirm extends Component {
         console.log(data2)
         axios.post("http://127.0.0.1:8000/dj-rest-auth/registration/",data1)
         .then(response=>{
-            console.log(response);
+            
             this.handleSecData(data2);
         })
-        .catch(error =>{console.log(error)})
+        .catch(error =>{
+            console.log(error)})
         
     }
 
     render() {
+        if (this.state.failed){
+            return <Navigate to='/wrong'/>
+        }
         if (this.state.redirect){
             return <Navigate to='/register_success'/>
         }
