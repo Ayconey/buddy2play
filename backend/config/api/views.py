@@ -230,9 +230,6 @@ def createTeam(request):
 
 @api_view(["GET", "POST"])
 def give_user_teams(request):
-    print(request.user)
-    print(request.auth)
-    print(request.data)
     current_user = User.objects.get(pk=int(request.data['user_id']))
     selected_teams = current_user.teams.all()
 

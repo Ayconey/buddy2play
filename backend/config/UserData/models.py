@@ -24,6 +24,8 @@ class Profile(models.Model):
         return f"{self.name} {self.surname} from {self.city}"
 
     def get_age(self):
+        if not self.birthday:
+            return 0
         age = datetime.date.today() - self.birthday
         return int((age).days / 365.25)
 
